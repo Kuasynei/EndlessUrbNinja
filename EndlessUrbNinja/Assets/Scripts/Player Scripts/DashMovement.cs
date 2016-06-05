@@ -3,6 +3,10 @@ using System.Collections;
 
 public class DashMovement : MonoBehaviour {
 
+    //Public Variables
+    [SerializeField] float dragDashTimeLimit = 1;
+    [SerializeField] int dashSpeed = 100;
+
     //Private Variables
     private Camera gCam;
     private Vector3 dashTarget;
@@ -12,6 +16,7 @@ public class DashMovement : MonoBehaviour {
 
     //Private Variables for the Held Button Dash
     private float timeButtonHeldDown;
+    private float startTime;
     private bool buttonHeldDown = false;
 
 
@@ -34,19 +39,19 @@ public class DashMovement : MonoBehaviour {
         {
 
             buttonHeldDown = true;
+            startTime = Time.time;
             //Keeps Update clean by having all the mouse/touch behaviour in another function
             mouseHandler();
             
         }
         //Added for the drag dash fire. It runs the dragDashHandler function as well as tells the game that
         //The player can no longer dragdash and to stop the held button count down.
-        //@note: Not working yet.
         if(Input.GetButtonUp("Fire1"))
         {
-            if (canDragDash)
+            if (canDragDash && timeButtonHeldDown > 0.3f)
             {
                 Debug.Log("Running");
-                //dragDashHandler();
+                dragDashHandler();
             }
             canDragDash = false;
             buttonHeldDown = false;
@@ -55,7 +60,8 @@ public class DashMovement : MonoBehaviour {
         //Checks the distance between the player and the dash target. Also slows down time so the player has
         //More time to react to the next point. Needs to be made smoother and needs tweaking
         //@note: Can be changed and made dynamic so it can check not only
-        //The dash target but also the drag dash target.
+        //The dash target but also the drag dash target. This is probably not necessary, but a limit needs to be set on
+        //Player velocity because I have been able to fling the player way off the map with it.
         if(Vector3.Distance(transform.position, dashTarget) < 0.5f)
         {
             rb.useGravity = true;
@@ -63,20 +69,25 @@ public class DashMovement : MonoBehaviour {
         }
 
 
-        //Starting code for the drag dash
+        //Checks if the players finger is pressed on the screen
         if(buttonHeldDown == true)
         {
-            timeButtonHeldDown++;
+            //If the timer still needs to count up then do so
+            if(timeButtonHeldDown < dragDashTimeLimit)
+            {
+                timeButtonHeldDown = Time.time - startTime;
+            }
         }
-        if(timeButtonHeldDown > 10)
+        //If the timer runs out make it so that the dash does not run.
+        if(timeButtonHeldDown > dragDashTimeLimit)
         {
             canDragDash = false;
         }
-
     }
 
     void mouseHandler()
     {
+        //reset the time held down
         timeButtonHeldDown = 0;
 
         //Resets the time scale so the dash is still fast
@@ -93,7 +104,6 @@ public class DashMovement : MonoBehaviour {
         {
             if (hit.collider.CompareTag("Enemy"))
             {
-                Debug.Log("Target Set");
 
                 //Sets the dash target to the object that was hit as long as it hits an enemy.
                 dashTarget = hit.collider.gameObject.transform.position;
@@ -105,28 +115,31 @@ public class DashMovement : MonoBehaviour {
                 rb.useGravity = false;
                 rb.velocity = Vector3.zero;
 
-                //Get the position between the dashTarget and the players current position and multiply it by the 100 scalar to maek it fast
-                rb.AddForce((dashTarget - transform.position) * 100);
+                //Add force at the point between the altered dashTarget and the players current position multiplied by the movement force.
+                rb.AddForce((dashTarget - transform.position) * dashSpeed);
 
                 //Allow the system to start the drag dash
                 canDragDash = true;
                 
 
             }
-            else
-            //Just a debug that shows if the player clicked something that wasnt the enemy. Useful for debugging.
-            Debug.Log(hit.collider.name);
         }
     }
 
-    //void dragDashHandler()
-    //{
-    //    dragDashDirection = gCam.(Input.mousePosition);
+    void dragDashHandler()
+    {
+        //Start by getting the mouses raw position
+        dragDashDirection = Input.mousePosition;
 
-    //    Debug.DrawLine(transform.position, dragDashDirection, Color.green, 3);
+        //Turn off gravity and stop all movement like before.
+        rb.useGravity = false;
+        rb.velocity = Vector3.zero;
 
-    //    rb.useGravity = false;
-    //    rb.velocity = Vector3.zero;
-    //    rb.AddForce((dragDashDirection - transform.position) * 100);
-    //}
+        //You have to set a Z-Depth for the Screen to world point to work. At the moment it is set to the cameras Z position away from the player.
+        dragDashDirection.z = 9.8f;
+
+        //Add force at the point between the altered dragDashDirection and the players current position multiplied by the movement force.
+        rb.AddForce((gCam.ScreenToWorldPoint(dragDashDirection) - transform.position) * dashSpeed);
+
+    }
 }
