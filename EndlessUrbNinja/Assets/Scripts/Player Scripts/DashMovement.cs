@@ -14,6 +14,11 @@ public class DashMovement : MonoBehaviour {
     private Rigidbody rb;
     private bool canDragDash = false;
 
+
+    //Dash timer variables @note: This is to properly reset the gravity
+    [SerializeField] float dashTime;
+    private float dashStartTime;
+
     //Private Variables for the Held Button Dash
     private float timeButtonHeldDown;
     private float startTime;
@@ -57,31 +62,25 @@ public class DashMovement : MonoBehaviour {
             buttonHeldDown = false;
         }
 
-        //Checks the distance between the player and the dash target. Also slows down time so the player has
-        //More time to react to the next point. Needs to be made smoother and needs tweaking
-        //@note: Can be changed and made dynamic so it can check not only
-        //The dash target but also the drag dash target. This is probably not necessary, but a limit needs to be set on
-        //Player velocity because I have been able to fling the player way off the map with it.
-        if(Vector3.Distance(transform.position, dashTarget) < 0.5f)
-        {
-            rb.useGravity = true;
-            Time.timeScale = 0.4f;
-        }
-
-
         //Checks if the players finger is pressed on the screen
-        if(buttonHeldDown == true)
+        if (buttonHeldDown == true)
         {
             //If the timer still needs to count up then do so
             if(timeButtonHeldDown < dragDashTimeLimit)
             {
-                timeButtonHeldDown = Time.time - startTime;
+                timeButtonHeldDown = CalculateTimePassed(startTime);
             }
         }
         //If the timer runs out make it so that the dash does not run.
         if(timeButtonHeldDown > dragDashTimeLimit)
         {
             canDragDash = false;
+        }
+
+        //Creates a timer for dash that turns gravity back on.
+        if(CalculateTimePassed(dashStartTime) > 0.5f)
+        {
+            rb.useGravity = true;
         }
     }
 
@@ -118,6 +117,8 @@ public class DashMovement : MonoBehaviour {
                 //Add force at the point between the altered dashTarget and the players current position multiplied by the movement force.
                 rb.AddForce((dashTarget - transform.position) * dashSpeed);
 
+                dashStartTime = Time.time;
+
                 //Allow the system to start the drag dash
                 canDragDash = true;
                 
@@ -141,5 +142,12 @@ public class DashMovement : MonoBehaviour {
         //Add force at the point between the altered dragDashDirection and the players current position multiplied by the movement force.
         rb.AddForce((gCam.ScreenToWorldPoint(dragDashDirection) - transform.position) * dashSpeed);
 
+        dashStartTime = Time.time;
+
+    }
+
+    float CalculateTimePassed(float startTime)
+    {
+        return Time.time - startTime;
     }
 }
