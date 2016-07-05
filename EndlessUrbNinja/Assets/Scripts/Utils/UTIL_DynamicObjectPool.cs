@@ -44,4 +44,9 @@ public class UTIL_DynamicObjectPool <T> : MonoBehaviour
 	{
 		return pool [0];
 	}
+
+	public T GetIndex(int i)
+	{
+		return pool [i];
+	}
 }

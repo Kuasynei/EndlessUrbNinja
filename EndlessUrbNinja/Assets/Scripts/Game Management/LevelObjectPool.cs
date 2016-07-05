@@ -63,4 +63,23 @@ public class LevelObjectPool : UTIL_DynamicObjectPool<LevelPackage>
 		someLevel.level.SetActive (true);
 		return base.PopOffPool ();
 	}
+
+	public LevelPackage PopOffPoolRand ()
+	{
+		if (Count () > 0)
+		{
+			int randomLevelIndex = Random.Range (0, Count () - 1);
+
+			LevelPackage someLevel = GetIndex (randomLevelIndex);
+
+			someLevel.level.transform.SetParent (null);
+			someLevel.level.SetActive (true);
+			return base.RemoveIndexFromPool (randomLevelIndex);
+		}
+		else
+		{
+			Debug.LogWarning ("DynamicObjectPool is empty! Cannot PullFromPool(), make sure the pool has enough objects.");
+			return null;
+		}
+	}
 }

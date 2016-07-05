@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class GameController : MonoBehaviour {
 
 	[SerializeField] bool debugMode = false;
+	[SerializeField] bool randomize = true;
 
 	Vector3 levelSpawnOffset = new Vector3(20, 0, 0); //Where levels will spawn by default.
 
@@ -44,11 +45,22 @@ public class GameController : MonoBehaviour {
 		{
 			Vector3 levelSpawnPosition = transform.position + levelSpawnOffset;
 
-			LevelPackage newActiveLevel = lvlPool.PopOffPool ();
-			activeLevels.Add (newActiveLevel);
-	
-			newActiveLevel.level.transform.SetParent (activeLevelsRoot.transform);
-			newActiveLevel.level.transform.position = levelSpawnPosition;
+			if (randomize)
+			{
+				LevelPackage newActiveLevel = lvlPool.PopOffPoolRand ();
+				activeLevels.Add (newActiveLevel);
+
+				newActiveLevel.level.transform.SetParent (activeLevelsRoot.transform);
+				newActiveLevel.level.transform.position = levelSpawnPosition;
+			}
+			else
+			{
+				LevelPackage newActiveLevel = lvlPool.PopOffPool ();
+				activeLevels.Add (newActiveLevel);
+
+				newActiveLevel.level.transform.SetParent (activeLevelsRoot.transform);
+				newActiveLevel.level.transform.position = levelSpawnPosition;
+			}
 		}
 	}
 
@@ -62,6 +74,7 @@ public class GameController : MonoBehaviour {
 		levelSpawnAllowed = true;
 	}
 
+	//Despawn level removes the oldest level to have been created. Since we're constantly moving to the right, this will always be the oldest level, the value at 0.
 	public void DespawnLevel()
 	{
 		lvlPool.AddToPool (activeLevels[0]);
