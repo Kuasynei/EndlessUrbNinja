@@ -13,6 +13,7 @@ public class DashMovement : MonoBehaviour {
     private Vector3 dragDashDirection;
     private Rigidbody rb;
     private bool canDragDash = false;
+    private bool isDashing = false;
 
 
     //Dash timer variables @note: This is to properly reset the gravity
@@ -150,4 +151,5 @@ public class DashMovement : MonoBehaviour {
     {
         return Time.time - startTime;
     }
+       
 }
