@@ -147,6 +147,8 @@ public class DashMovement : MonoBehaviour {
 
     }
 
+
+    //Simple time calculator that tells how much time has passed.
     float CalculateTimePassed(float startTime)
     {
         return Time.time - startTime;
