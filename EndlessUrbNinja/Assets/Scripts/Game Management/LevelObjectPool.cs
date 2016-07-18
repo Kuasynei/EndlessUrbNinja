@@ -6,6 +6,22 @@ public class LevelPackage
 {
 	public GameObject level;
 	public float difficulty;
+
+	public void WakeFromPooling() //This function is run whenever this level is being pulled out of a pool.
+	{
+		RefreshEnemyList ();
+	}
+
+	private void RefreshEnemyList() //This will reactive any destroyed enemies in a level.
+	{
+		Enemy[] enemyList = level.GetComponentsInChildren<Enemy> (true);
+
+		foreach (Enemy enemy in enemyList)
+		{
+			enemy.gameObject.SetActive (true);
+			enemy.Respawn ();
+		}
+	}
 }
 
 public class LevelObjectPool : UTIL_DynamicObjectPool<LevelPackage>
@@ -61,6 +77,8 @@ public class LevelObjectPool : UTIL_DynamicObjectPool<LevelPackage>
 
 		someLevel.level.transform.SetParent (null);
 		someLevel.level.SetActive (true);
+		someLevel.WakeFromPooling ();
+
 		return base.PopOffPool ();
 	}
 
@@ -74,6 +92,8 @@ public class LevelObjectPool : UTIL_DynamicObjectPool<LevelPackage>
 
 			someLevel.level.transform.SetParent (null);
 			someLevel.level.SetActive (true);
+			someLevel.WakeFromPooling ();
+
 			return base.RemoveIndexFromPool (randomLevelIndex);
 		}
 		else

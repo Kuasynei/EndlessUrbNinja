@@ -11,7 +11,7 @@ public class LevelObjectReturner : MonoBehaviour {
 		GC = GlobalReferences.gameController;
 	}
 
-	void OnTriggerEnter(Collider otherColl)
+	void OnTriggerExit(Collider otherColl)
 	{
 		GC.DespawnLevel ();
 	}

@@ -33,6 +33,12 @@ public class Enemy : MonoBehaviour {
             }
 
         }	
+
+		if (Input.GetKey(KeyCode.K))
+		{
+			currentState = false;
+			gameObject.SetActive (false);
+		}
 	}
 
     void OnTriggerEnter(Collider colInfo)
@@ -49,4 +55,13 @@ public class Enemy : MonoBehaviour {
     {
         return currentState;
     }
+
+	public void Respawn()
+	{
+		currentState = true;
+
+		//gameObject.SetActive (true); 
+		//If this game object was not active, this code wouldn't even run.
+		//This game object needs to be reactivated externally.
+	}
 }

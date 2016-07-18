@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour {
 
 	[SerializeField] bool debugMode = false;
 	[SerializeField] bool randomize = true;
+	[SerializeField] float startDelay = 3; //Only start spawning after this much time has passed (so we don't spawn within the starting block).
 
 	Vector3 levelSpawnOffset = new Vector3(20, 0, 0); //Where levels will spawn by default.
 
@@ -17,13 +18,14 @@ public class GameController : MonoBehaviour {
 
 	bool levelSpawnAllowed = true; //If there is room for the level to spawn, try spawning it (among other conditions).
 	int metersProgressed = 0;
+	int levelHeightVariance = 2;
 
 	void Awake()
 	{
 		GlobalReferences.gameController = this;
 
 		lvlPool = GetComponent<LevelObjectPool>(); 
-		lvlPool.PrepareNewLevels (0); //Adds levels of the specified difficulty to the level pool.
+		lvlPool.PrepareNewLevels (1); //Adds levels of the specified difficulty to the level pool.
 
 		activeLevelsRoot = new GameObject ("Active Levels");
 	}
@@ -40,10 +42,15 @@ public class GameController : MonoBehaviour {
 			Debug.Log ("levelSpawnAllowed = " + levelSpawnAllowed);
 		}
 
-		////SPAWN LEVEL CODE
-		if (levelSpawnAllowed)
+		if (startDelay > 0)
 		{
-			Vector3 levelSpawnPosition = transform.position + levelSpawnOffset;
+			startDelay -= Time.deltaTime;
+		}
+
+		////SPAWN LEVEL CODE
+		if (levelSpawnAllowed && startDelay <= 0)
+		{
+			Vector3 levelSpawnPosition = transform.position + levelSpawnOffset + (Vector3.up * Random.Range(-levelHeightVariance, levelHeightVariance));
 
 			if (randomize)
 			{
