@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 [RequireComponent (typeof(LevelObjectPool))]
 public class GameController : MonoBehaviour {
-
+	
 	[SerializeField] bool debugMode = false;
 	[SerializeField] bool randomize = true;
 	[SerializeField] float startDelay = 3; //Only start spawning after this much time has passed (so we don't spawn within the starting block).
@@ -12,13 +12,15 @@ public class GameController : MonoBehaviour {
 	Vector3 levelSpawnOffset = new Vector3(20, 0, 0); //Where levels will spawn by default.
 
 	LevelObjectPool lvlPool; //Getting a reference to the level pool attached to this gameobject.
-
 	GameObject activeLevelsRoot; //A gameobject to hold all levels that are currently ACTIVE.
 	List<LevelPackage> activeLevels = new List<LevelPackage>();
 
 	bool levelSpawnAllowed = true; //If there is room for the level to spawn, try spawning it (among other conditions).
 	int metersProgressed = 0;
 	int levelHeightVariance = 2;
+
+	float idealXPosition;
+	float idealXPositionOffset = -4;
 
 	void Awake()
 	{
@@ -41,6 +43,8 @@ public class GameController : MonoBehaviour {
 		{
 			Debug.Log ("levelSpawnAllowed = " + levelSpawnAllowed);
 		}
+
+		idealXPosition = transform.position.x - idealXPositionOffset;
 
 		if (startDelay > 0)
 		{
