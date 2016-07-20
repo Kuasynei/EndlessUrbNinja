@@ -16,11 +16,9 @@ public class GameController : MonoBehaviour {
 	List<LevelPackage> activeLevels = new List<LevelPackage>();
 
 	bool levelSpawnAllowed = true; //If there is room for the level to spawn, try spawning it (among other conditions).
-	int metersProgressed = 0;
 	int levelHeightVariance = 2;
-
-	float idealXPosition;
 	float idealXPositionOffset = -4;
+
 
 	void Awake()
 	{
@@ -32,19 +30,15 @@ public class GameController : MonoBehaviour {
 		activeLevelsRoot = new GameObject ("Active Levels");
 	}
 
-	void Update()
-	{
-		metersProgressed = Mathf.RoundToInt(transform.position.x);
-	}
-
 	void FixedUpdate()
 	{
+		GlobalReferences.distanceRun = Mathf.RoundToInt(transform.position.x);
+		GlobalReferences.idealXPosition = transform.position.x + idealXPositionOffset;
+
 		if (debugMode)
 		{
 			Debug.Log ("levelSpawnAllowed = " + levelSpawnAllowed);
 		}
-
-		idealXPosition = transform.position.x - idealXPositionOffset;
 
 		if (startDelay > 0)
 		{
