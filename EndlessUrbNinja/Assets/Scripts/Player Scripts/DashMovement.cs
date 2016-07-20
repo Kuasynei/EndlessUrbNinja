@@ -98,9 +98,14 @@ public class DashMovement : MonoBehaviour {
 
         //Create a Hit object to store the following raycast in
         RaycastHit hit;
+
+        //Using Bitshifting select the layer that we want to raycast on only, then use the ~
+        //to make it do the exact opposite.
+        int layerMask = 1 << 8;
+
         //Send a ray from the mouses current position relative to the camera that is 100 units long 
         //(@note: Not sure if this value matters, need more testing), and stores it in the Raycast Hit object
-        if (Physics.Raycast(gCam.ScreenPointToRay(Input.mousePosition), out hit, 100))
+        if (Physics.Raycast(gCam.ScreenPointToRay(Input.mousePosition), out hit, 100, ~layerMask))
         {
             if (hit.collider.CompareTag("Enemy"))
             {
