@@ -41,19 +41,19 @@ public class AutoRunMovement : MonoBehaviour {
     //@note: Started with Stay instead of Enter, found there was too much delay with stay.
     void OnCollisionEnter(Collision colInfo)
     {
-        if(colInfo.gameObject.CompareTag("Ground"))
-        {
+        //if(colInfo.gameObject.CompareTag("Ground"))
+        //{
             isTouchingGround = true;
-        }
+        //}
     }
 
     //Similar to the function above just changes the bool if the player leaves the ground.
     void OnCollisionExit(Collision colInfo)
     {
-        if (colInfo.gameObject.CompareTag("Ground"))
-        {
+        //if (colInfo.gameObject.CompareTag("Ground"))
+        //{
             isTouchingGround = false;
-        }
+        //}
     }
 
 	public float GetMaxRunSpeed()
