@@ -6,6 +6,7 @@ public class DashMovement : MonoBehaviour {
     //Public Variables
     [SerializeField] float dragDashTimeLimit = 1;
     [SerializeField] int dashSpeed = 100;
+    [SerializeField] int distanceBuffer;
 
     //Private Variables
     private Camera gCam;
@@ -14,6 +15,7 @@ public class DashMovement : MonoBehaviour {
     private Rigidbody rb;
     private bool canDragDash = false;
     private bool isDashing = false;
+    private GameObject currentlyTargetedEnemy;
 
 
     //Dash timer variables @note: This is to properly reset the gravity
@@ -83,6 +85,18 @@ public class DashMovement : MonoBehaviour {
         {
             rb.useGravity = true;
         }
+
+        if(currentlyTargetedEnemy)
+        {
+            if (Vector3.Distance(gameObject.transform.position, currentlyTargetedEnemy.transform.position) <= distanceBuffer && isDashing)
+            {
+                rb.velocity = rb.velocity / 10;
+                rb.AddForce(Vector3.up * 10);
+                Debug.Log("Hit Enemy While Dashing");
+                isDashing = false;
+
+            }
+        } 
     }
 
     void mouseHandler()
@@ -127,7 +141,8 @@ public class DashMovement : MonoBehaviour {
 
                 //Allow the system to start the drag dash
                 canDragDash = true;
-                
+                isDashing = true;
+
 
             }
         }
@@ -157,6 +172,25 @@ public class DashMovement : MonoBehaviour {
     float CalculateTimePassed(float startTime)
     {
         return Time.time - startTime;
+    }
+
+    void OnTriggerEnter(Collider colInfo)
+    {
+        Debug.Log("Hit Something");
+
+        if(colInfo.gameObject.tag == "Enemy")
+        {
+            Debug.Log("Hit Enemy");
+            //Check if the player is currently dashing
+            if(isDashing)
+            {
+                currentlyTargetedEnemy = colInfo.gameObject;
+            }
+            else
+            {
+                //Player Dies. Not yet implemented
+            }
+        }
     }
        
 }
