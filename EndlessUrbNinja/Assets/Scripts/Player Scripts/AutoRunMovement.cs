@@ -31,7 +31,7 @@ public class AutoRunMovement : MonoBehaviour {
 		} 
 		//Check if the object is going too fast as well if it is on the ground.
 		//If the player is not on on the ground then dont push it forward at all
-		else if(rb.velocity.magnitude <= maxRunSpeed && isTouchingGround)
+		else if(rb.velocity.magnitude <= maxRunSpeed)
         {
 			rb.AddForce(Vector3.right * accelerationSpeed * (Time.deltaTime * 100));
         }
@@ -39,22 +39,22 @@ public class AutoRunMovement : MonoBehaviour {
 
     //Collision Check to see if the player is standing on the ground.
     //@note: Started with Stay instead of Enter, found there was too much delay with stay.
-    void OnCollisionEnter(Collision colInfo)
-    {
+    //void OnCollisionEnter(Collision colInfo)
+    //{
         //if(colInfo.gameObject.CompareTag("Ground"))
         //{
-            isTouchingGround = true;
+            //isTouchingGround = true;
         //}
-    }
+    //}
 
     //Similar to the function above just changes the bool if the player leaves the ground.
-    void OnCollisionExit(Collision colInfo)
-    {
+    //void OnCollisionExit(Collision colInfo)
+    //{
         //if (colInfo.gameObject.CompareTag("Ground"))
         //{
-            isTouchingGround = false;
+        //    isTouchingGround = false;
         //}
-    }
+    //}
 
 	public float GetMaxRunSpeed()
 	{

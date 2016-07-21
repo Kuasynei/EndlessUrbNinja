@@ -142,8 +142,6 @@ public class DashMovement : MonoBehaviour {
                 //Allow the system to start the drag dash
                 canDragDash = true;
                 isDashing = true;
-
-
             }
         }
     }
