@@ -6,6 +6,7 @@ public class CameraHandler : MonoBehaviour {
 
 	[SerializeField]AutoRunMovement playerAutoRun;
 	[SerializeField]float cameraYOffset = 0;
+	[SerializeField]float cameraXOffset = 0;
 
 	float targetScrollSpeed;
 
@@ -16,7 +17,7 @@ public class CameraHandler : MonoBehaviour {
 
 	void Update()
 	{
-		Vector3 playerPosition = playerAutoRun.transform.position;
+		Vector3 playerPosition = playerAutoRun.transform.position + new Vector3(cameraXOffset, 0, 0);
 
 		transform.position = new Vector3 (transform.position.x, playerPosition.y/4 + cameraYOffset, transform.position.z);
 		transform.position += new Vector3 (targetScrollSpeed * Time.deltaTime, 0, 0);

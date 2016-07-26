@@ -106,4 +106,10 @@ public class GameController : MonoBehaviour {
 		cameraHandler.enabled = true;
 		cameraHandler.SetTargetPlayer (playerCharacter);
 	}
+
+	//Player ded.
+	public void GameOver()
+	{
+		
+	}
 }
