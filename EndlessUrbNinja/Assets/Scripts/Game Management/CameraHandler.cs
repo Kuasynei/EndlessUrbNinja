@@ -21,7 +21,6 @@ public class CameraHandler : MonoBehaviour {
 		transform.position = new Vector3 (transform.position.x, playerPosition.y/4 + cameraYOffset, transform.position.z);
 		transform.position += new Vector3 (targetScrollSpeed * Time.deltaTime, 0, 0);
 
-		Debug.Log (transform.position.x + "   |||   " + playerPosition.x);
 		if (transform.position.x < playerPosition.x)
 		{
 			transform.position = Vector3.Lerp (new Vector3(transform.position.x, transform.position.y, transform.position.z), new Vector3(playerPosition.x, transform.position.y, transform.position.z), 0.1f);
