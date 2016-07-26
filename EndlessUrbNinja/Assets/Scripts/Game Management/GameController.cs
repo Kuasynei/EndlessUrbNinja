@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 [RequireComponent (typeof(LevelObjectPool))]
 public class GameController : MonoBehaviour {
@@ -8,17 +9,20 @@ public class GameController : MonoBehaviour {
 	[SerializeField] bool debugMode = false;
 	[SerializeField] bool randomize = true;
 	[SerializeField] float startDelay = 3; //Only start spawning after this much time has passed (so we don't spawn within the starting block).
-
-	Vector3 levelSpawnOffset = new Vector3(20, 0, 0); //Where levels will spawn by default.
+	[SerializeField] CameraHandler cameraHandler;
+	[SerializeField] Text[] distanceText;
+	[SerializeField] GameObject playerCharacter;
 
 	LevelObjectPool lvlPool; //Getting a reference to the level pool attached to this gameobject.
 	GameObject activeLevelsRoot; //A gameobject to hold all levels that are currently ACTIVE.
 	List<LevelPackage> activeLevels = new List<LevelPackage>();
 
+	Vector3 levelSpawnOffset; //Where levels will spawn by default.
 	bool levelSpawnAllowed = true; //If there is room for the level to spawn, try spawning it (among other conditions).
 	int levelHeightVariance = 2;
 	float idealXPositionOffset = -4;
 
+	Vector3 playerSpawnOffset = new Vector3(-23, 0, 0);
 
 	void Awake()
 	{
@@ -26,8 +30,19 @@ public class GameController : MonoBehaviour {
 
 		lvlPool = GetComponent<LevelObjectPool>(); 
 		lvlPool.PrepareNewLevels (1); //Adds levels of the specified difficulty to the level pool.
-
 		activeLevelsRoot = new GameObject ("Active Levels");
+
+		levelSpawnOffset = GetComponent<BoxCollider> ().center;
+
+		StartGame (); //MOVE THIS TO A BUTTON
+	}
+
+	void Update()
+	{
+		foreach (Text uiText in distanceText)
+		{
+			uiText.text = Mathf.RoundToInt (transform.position.x).ToString();
+		}
 	}
 
 	void FixedUpdate()
@@ -84,5 +99,11 @@ public class GameController : MonoBehaviour {
 	{
 		lvlPool.AddToPool (activeLevels[0]);
 		activeLevels.RemoveAt (0);
+	}
+
+	public void StartGame()
+	{
+		cameraHandler.enabled = true;
+		cameraHandler.SetTargetPlayer (playerCharacter);
 	}
 }
