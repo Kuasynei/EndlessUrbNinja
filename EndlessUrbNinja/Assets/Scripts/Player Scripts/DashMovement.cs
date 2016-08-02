@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(PlayerStatusChanges))]
 public class DashMovement : MonoBehaviour {
 
     //Public Variables
@@ -16,7 +17,7 @@ public class DashMovement : MonoBehaviour {
     private bool canDragDash = false;
     private bool isDashing = false;
     private GameObject currentlyTargetedEnemy;
-
+	private PlayerStatusChanges PSCscript;
 
     //Dash timer variables @note: This is to properly reset the gravity
     [SerializeField] float dashTime;
@@ -27,18 +28,17 @@ public class DashMovement : MonoBehaviour {
     private float startTime;
     private bool buttonHeldDown = false;
 
+	void Awake(){
+		//Store the main camera so a ray can be sent from the mouses position relative to it
+		gCam = Camera.main;
 
-	// Use this for initialization
-	void Start () {
+		//Store the Rigidbody on the player for faster access
+		rb = GetComponent<Rigidbody>();
 
-        //Store the main camera so a ray can be sent from the mouses position relative to it
-        gCam = Camera.main;
-       
-        //Store the Rigidbody on the player for faster access
-        rb = GetComponent<Rigidbody>();
-
+		//Communication with the PSC script for things like challenges, or death status (particularly when being killed by an enemy while dashing).
+		PSCscript = GetComponent<PlayerStatusChanges> ();
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 
@@ -186,7 +186,8 @@ public class DashMovement : MonoBehaviour {
             }
             else
             {
-                //Player Dies. Not yet implemented
+				//The player dies.
+				PSCscript.GameOver ();
             }
         }
     }
