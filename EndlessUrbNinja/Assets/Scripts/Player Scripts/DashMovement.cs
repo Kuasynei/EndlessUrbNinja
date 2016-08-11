@@ -92,7 +92,7 @@ public class DashMovement : MonoBehaviour {
             {
                 rb.velocity = rb.velocity / 10;
                 rb.AddForce(Vector3.up * 10);
-                Debug.Log("Hit Enemy While Dashing");
+                //Debug.Log("Hit Enemy While Dashing");
                 isDashing = false;
 
             }
@@ -127,7 +127,7 @@ public class DashMovement : MonoBehaviour {
                 //Sets the dash target to the object that was hit as long as it hits an enemy.
                 dashTarget = hit.collider.gameObject.transform.position;
 
-                Debug.Log(hit.collider.gameObject.transform.position);
+                //Debug.Log(hit.collider.gameObject.transform.position);
                 Debug.DrawLine(transform.position, hit.collider.gameObject.transform.position, Color.red, 3);
 
                 //Set no gravity so the player doesnt immediately start flying down, reset the player motion so the dash works properly.
@@ -174,11 +174,11 @@ public class DashMovement : MonoBehaviour {
 
     void OnTriggerEnter(Collider colInfo)
     {
-        Debug.Log("Hit Something");
+        //Debug.Log("Hit Something");
 
         if(colInfo.gameObject.tag == "Enemy")
         {
-            Debug.Log("Hit Enemy");
+            //Debug.Log("Hit Enemy");
             //Check if the player is currently dashing
             if(isDashing)
             {

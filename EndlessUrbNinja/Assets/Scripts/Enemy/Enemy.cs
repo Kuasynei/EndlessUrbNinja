@@ -24,7 +24,7 @@ public class Enemy : MonoBehaviour {
             //player is within the distance buffer.
             if (Vector3.Distance(gameObject.transform.position, player.transform.position) <= distanceBuffer && currentState == true)
             {
-                Debug.Log("Player killed enemy");
+                //Debug.Log("Player killed enemy");
 
                 currentState = false;
 
@@ -45,7 +45,7 @@ public class Enemy : MonoBehaviour {
     {
         if (colInfo.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Player Within Enemy Radius");
+            //Debug.Log("Player Within Enemy Radius");
 
             player = colInfo.gameObject;
         }
