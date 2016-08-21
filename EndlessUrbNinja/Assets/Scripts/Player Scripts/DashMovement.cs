@@ -156,10 +156,12 @@ public class DashMovement : MonoBehaviour {
         rb.velocity = Vector3.zero;
 
         //You have to set a Z-Depth for the Screen to world point to work. At the moment it is set to the cameras Z position away from the player.
-        dragDashDirection.z = 9.8f;
+        //dragDashDirection.z = 9.8f;
+		dragDashDirection.z = 25f;
 
         //Add force at the point between the altered dragDashDirection and the players current position multiplied by the movement force.
         rb.AddForce((gCam.ScreenToWorldPoint(dragDashDirection) - transform.position) * dashSpeed);
+		Debug.DrawRay (transform.position, (gCam.ScreenToWorldPoint(dragDashDirection) - transform.position) * (dashSpeed/100), Color.green, 2f);
 
         dashStartTime = Time.time;
 
