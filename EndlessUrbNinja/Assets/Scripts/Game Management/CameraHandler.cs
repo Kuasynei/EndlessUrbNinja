@@ -17,6 +17,7 @@ public class CameraHandler : MonoBehaviour {
 	void Start()
 	{
 		targetScrollSpeed = playerAutoRun.GetMaxRunSpeed ();
+		GlobalReferences.cameraHandler = this;
 	}
 
 	void Update()
