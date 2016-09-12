@@ -6,7 +6,7 @@ public enum CameraMode{running, slowStop, stopped}
 [RequireComponent(typeof(Rigidbody))]
 public class CameraHandler : MonoBehaviour {
 
-	[SerializeField]AutoRunMovement playerAutoRun;
+	[SerializeField]PlayerController playerController;
 	[SerializeField]float cameraYOffset = 0;
 	[SerializeField]float cameraXOffset = 0;
 
@@ -16,13 +16,13 @@ public class CameraHandler : MonoBehaviour {
 
 	void Start()
 	{
-		targetScrollSpeed = playerAutoRun.GetMaxRunSpeed ();
+		targetScrollSpeed = playerController.GetMaxRunSpeed ();
 		GlobalReferences.cameraHandler = this;
 	}
 
 	void Update()
 	{
-		Vector3 playerPosition = playerAutoRun.transform.position + new Vector3 (cameraXOffset, 0, 0);
+		Vector3 playerPosition = playerController.transform.position + new Vector3 (cameraXOffset, 0, 0);
 
 		switch (myCamMode)
 		{
@@ -53,7 +53,7 @@ public class CameraHandler : MonoBehaviour {
 
 	public void SetTargetPlayer(GameObject targetPlayer)
 	{
-		playerAutoRun = targetPlayer.GetComponent<AutoRunMovement>();
+		playerController = targetPlayer.GetComponent<PlayerController>();
 	}
 
 	public void SetMovementMode(CameraMode camMode)
