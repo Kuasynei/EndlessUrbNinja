@@ -114,7 +114,7 @@ public class PlayerController : MonoBehaviour {
 			isDashing = false;
 		}
 
-		if (rb.drag > 0)
+		if (rb.drag > 1)
 		{
 			rb.drag -= (rb.drag * 0.8f) * (Time.deltaTime * 10);
 		}
@@ -204,6 +204,27 @@ public class PlayerController : MonoBehaviour {
 
 		//Converting the mouse location to a world position.
 		dragDashTarget = (gCam.ScreenToWorldPoint (dragDashTarget));
+
+		//If the dragDashTarget puts the player on a collision path with terrain, stop the drag dash there so they don't charge into terrain.
+		RaycastHit[] hits = Physics.SphereCastAll(transform.position, 1, dragDashTarget - transform.position, (dragDashTarget - transform.position).magnitude);
+		if (hits.Length > 0)
+		{
+			float closestTerrain = Vector3.Distance(transform.position, dragDashTarget);
+			for (int i = 0; i < hits.Length; i++)
+			{
+				//If you've hit terrain, Mark its distance, and place the dragDashTarget at the closest terrain-collision position.
+				if (hits [i].collider.CompareTag ("Terrain") && Vector3.Distance (transform.position, hits [i].point) < closestTerrain)
+				{
+					closestTerrain = Vector3.Distance (transform.position, hits [i].point);
+				}
+			}
+
+			//If the path between the player and the dragDashTarget is not free of terrain, then pull the target back so the collision won't happen.
+			if (closestTerrain < Vector3.Distance(transform.position, dragDashTarget))
+			{
+				dragDashTarget = (dragDashTarget - transform.position).normalized * closestTerrain + transform.position;
+			}
+		}
 
 		//If the dragDashTarget is close enough to an enemy, a default "pop-up" dash is performed. A bit of velocity is retained for a more natural feeling.
 		if (Vector3.Distance (dashTarget, dragDashTarget) < dragDashMinimumThreshold)
